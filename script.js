@@ -14,11 +14,6 @@ const Gameboard = (row, column, symbol) => {
 
    
     const returnBoard = () => {
-        var board = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', ''],
-        ];
         populateGrid(board)
     };
 
@@ -28,7 +23,6 @@ const Gameboard = (row, column, symbol) => {
         grid.setAttribute("column", j);
         grid.id = "b" + i + '' + j;
         grid.textContent = board[i][j];
-        // grid.innerHTML = `<label class='text-effect ${board[i][j]}'>${board[i][j]}</label>`
         grid.classList.add('grid');
         if (grid.textContent == '') {
             grid.addEventListener('click', game.Play)
@@ -93,15 +87,11 @@ const Gameboard = (row, column, symbol) => {
         }
     }
 
-
     const defineResults = (symbol) => {
-
         let label = document.getElementsByClassName('results')[0];
         label.innerHTML = `${symbol} Wins the Round`
         removeListener();
         showBtnReplay();
-        
-       
     }
     return { updateBoard, populateGrid, returnBoard,defineResults,identifyWinners }
 
@@ -140,9 +130,6 @@ const PlayGame = () => {
         let winner = validateWinner(symbol, board);
         if (winner) gameBoard.defineResults(symbol);
         switchTurns(playerOne, playerTwo);
-
-        // let grid = document.getElementById(id);
-        // console.log('Fila: ' +row + 'Columna: '+column)
     }
 
     const validateWinner = (symbol, board) => {
