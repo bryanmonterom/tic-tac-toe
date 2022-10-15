@@ -12,6 +12,7 @@ const Gameboard = (row, column, symbol) => {
         return board;
     }
 
+  
    
     const returnBoard = () => {
         populateGrid(board)
@@ -92,8 +93,17 @@ const Gameboard = (row, column, symbol) => {
         label.innerHTML = `${symbol} Wins the Round`
         removeListener();
         showBtnReplay();
+        
     }
-    return { updateBoard, populateGrid, returnBoard,defineResults,identifyWinners }
+
+    const drawResults = () => {
+            let label = document.getElementsByClassName('results')[0];
+            label.innerHTML = ` It's a draw`
+            removeListener();
+            showBtnReplay();
+            return;
+    }
+    return { updateBoard, populateGrid, returnBoard,defineResults,drawResults,identifyWinners }
 
 
 }
@@ -127,8 +137,13 @@ const PlayGame = () => {
         const column = e.target.getAttribute('column');
         const id = e.target.getAttribute('id');
         let board = gameBoard.updateBoard(row, column, symbol);
-        let winner = validateWinner(symbol, board);
-        if (winner) gameBoard.defineResults(symbol);
+        let draw = validateDraw(board);
+        if(draw){gameBoard.drawResults()}
+       let winner = validateWinner(symbol, board);
+        if (winner){
+            gameBoard.defineResults(symbol);
+            return;
+        } 
         switchTurns(playerOne, playerTwo);
     }
 
@@ -169,8 +184,25 @@ const PlayGame = () => {
             return true;
         }
 
+
+
         return false;
     }
+
+    const validateDraw = (board) => {
+        for (let index = 0; index < 3; index++) {
+
+            for (let j = 0; j < 3; j++) {
+               if(board[index][j] == ''){
+                return false;
+               }
+            }
+
+        }
+        
+        return true;
+    }
+
 
 
 
