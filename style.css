@@ -1,11 +1,11 @@
 .grid-container{
-    box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
-    background-color: white;
     width: 500px;
-    height: 500px;
+    height: 560px;
     display: flex;
     align-items: stretch;
     flex-direction: column;
+    padding: 25px;
+
 }
 
 
@@ -13,15 +13,159 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    border: 1px solid red;
     height: calc(100%);
     width: calc(100%);
 }
 
+.text-effect{
+    animation: fadeIn 1s; 
+}
+
+.X{
+    color: #D6CDA4;
+    font-size: 96px;
+}
+
+.O{
+    color: #3D8361;
+    font-size: 96PX;
+
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+
+#b00{
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+}
+
+#b01{
+    border-top: 0;
+}
+
+#b02{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+
+#b10{
+    border-left: 0;
+    border-bottom: 0;
+
+}
+
+#b11{
+    border-bottom: 0;
+    border-right: 0;
+    border-left: 0;
+
+}
+
+#b12{
+    border-bottom: 0;
+    border-right: 0;
+
+}
+
+
+#b20{
+    border-left: 0;
+    border-bottom: 0;
+
+
+}
+
+#b21{
+    border-bottom: 0;
+    border-left: 0;
+
+
+}
+
+#b22{
+    border-bottom: 0;
+    border-right: 0;
+    border-left: 0;
+
+}
+
+
+
+
 .grid{
     height: calc(100px);
-    border: 1px solid red;
     height: calc(100%);
     width: calc(100%);
-    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    border: 15px solid #1C6758;
+
 }
+
+
+.container{
+    display: flex;
+    justify-content:center ;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+body{
+    background-color: #EEF2E6;
+    font-family: 'Bangers';font-size: 22px;
+    animation: fadeIn 3s; 
+
+
+}
+
+.results{
+    font-size: 45px;
+    color: #1C6758;
+    text-align: center;
+    padding: 12px 16px; /* Some padding */
+
+
+}
+
+.title{
+    color: #1C6758;
+    font-size: 80px;
+
+
+}
+
+.winner{
+    background-color:#e0dcdc;
+}
+
+.btn {
+    background-color: #1C6758; /* Blue background */
+    border: none; /* Remove borders */
+    color: #D6CDA4; /* White text */
+    margin-top: 12px;
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+  }
+  
+  /* Darker background on mouse-over */
+  .btn:hover {
+    background-color:#3D8361;
+  }
+
+  .hidden{
+    display: none;
+  }

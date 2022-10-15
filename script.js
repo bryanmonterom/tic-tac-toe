@@ -1,51 +1,109 @@
 const Gameboard = (row, column, symbol) => {
+   
     var board = [
         ['', '', ''],
         ['', '', ''],
         ['', '', ''],
     ];
+
     const updateBoard = (row, column, symbol) => {
         board[row][column] = symbol;
-        populateGrid(board);
+        populateGrid(board, symbol);
+        return board;
     }
 
+   
     const returnBoard = () => {
-        board;
+        var board = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', ''],
+        ];
         populateGrid(board)
     };
 
-    const returnGrid = (i,j)=>{
+    const returnGrid = (i, j, symbol,board) => {
         let grid = document.createElement('div');
         grid.setAttribute("row", i);
         grid.setAttribute("column", j);
-        grid.id = i+''+j;
+        grid.id = "b" + i + '' + j;
         grid.textContent = board[i][j];
-        if(grid.textContent ==''){grid.addEventListener('click', game.Play)}
+        // grid.innerHTML = `<label class='text-effect ${board[i][j]}'>${board[i][j]}</label>`
         grid.classList.add('grid');
+        if (grid.textContent == '') {
+            grid.addEventListener('click', game.Play)
+            return grid;
+        }
+        grid.classList.add(grid.textContent);
         return grid;
     }
 
-    const returnGridRow = ()=>{
+    const returnGridRow = () => {
         let gridRow = document.createElement('div');
         gridRow.classList.add('grid-row');
         return gridRow;
     }
-    
 
-    const populateGrid = (board) => {
+
+    const populateGrid = (board, symbol) => {
         const gridContainer = document.querySelector('.grid-container');
         gridContainer.innerHTML = '';
         for (let i = 0; i < board.length; i++) {
             let gridRow = returnGridRow();
-             gridContainer.appendChild(gridRow);
+            gridContainer.appendChild(gridRow);
             for (let j = 0; j < board[i].length; j++) {
-                gridRow.appendChild(returnGrid(i,j));
+                gridRow.appendChild(returnGrid(i, j, symbol,board));
             }
         }
         return gridContainer;
 
     }
-    return { updateBoard, populateGrid, returnBoard }
+
+    const removeListener = () => {
+        document.querySelectorAll('.grid').forEach(item => item.removeEventListener('click', game.Play, false))
+    }
+
+    const showBtnReplay=()=>{
+        document.getElementById('btnReplay').classList.toggle('hidden');
+    }
+
+    
+    const identifyWinners=(symbol, index, direction)=>{
+        if (direction == "diagonalinversa") {
+
+            document.getElementById('b02').classList.add('winner');
+            document.getElementById('b11').classList.add('winner');
+            document.getElementById('b20').classList.add('winner');
+        }
+        else if (direction == "diagonal") {
+            document.getElementById('b00').classList.add('winner');
+            document.getElementById('b11').classList.add('winner');
+            document.getElementById('b22').classList.add('winner');
+        }
+        else if (direction == "vertical") {
+
+            document.getElementById('b0' + index).classList.add('winner');
+            document.getElementById('b1' + index).classList.add('winner');
+            document.getElementById('b2' + index).classList.add('winner');
+        }
+        else if (direction == "horizontal"){
+            document.getElementById(`b${index}0`).classList.add('winner');
+            document.getElementById(`b${index}1`).classList.add('winner');
+            document.getElementById(`b${index}2`).classList.add('winner');
+        }
+    }
+
+
+    const defineResults = (symbol) => {
+
+        let label = document.getElementsByClassName('results')[0];
+        label.innerHTML = `${symbol} Wins the Round`
+        removeListener();
+        showBtnReplay();
+        
+       
+    }
+    return { updateBoard, populateGrid, returnBoard,defineResults,identifyWinners }
 
 
 }
@@ -68,31 +126,78 @@ const PlayGame = () => {
         gameBoard.returnBoard();
     }
 
+
+    const replay = () => {
+        gameBoard = null;
+        // console.log(gameBoard.reset());
+    }
     const Play = (e) => {
         const symbol = playerOne.isPlaying ? playerOne.symbol : playerTwo.symbol
         const row = e.target.getAttribute('row');
         const column = e.target.getAttribute('column');
         const id = e.target.getAttribute('id');
-        let grid = document.getElementById(id);
-        gameBoard.updateBoard(row, column, symbol);
+        let board = gameBoard.updateBoard(row, column, symbol);
+        let winner = validateWinner(symbol, board);
+        if (winner) gameBoard.defineResults(symbol);
         switchTurns(playerOne, playerTwo);
-        grid.removeEventListener('click',game.Play,false)
-        console.log(id)
+
+        // let grid = document.getElementById(id);
+        // console.log('Fila: ' +row + 'Columna: '+column)
+    }
+
+    const validateWinner = (symbol, board) => {
+
+        if (validateVertical(symbol, board)) {
+            return true;
+        }
+        return false
 
     }
+
+    const validateVertical = (symbol, board) => {
+        for (let index = 0; index < 3; index++) {
+
+            // validate vertical
+            if (board[0][index] == symbol && board[1][index] == symbol && board[2][index] == symbol) {
+                gameBoard.identifyWinners(symbol, index, 'vertical')
+                return true;
+
+            }
+            //validate horitontal
+            if (board[index][0] == symbol && board[index][1] == symbol && board[index][2] == symbol) {
+                gameBoard.identifyWinners(symbol, index, 'horizontal')
+                return true;
+
+            }
+        }
+        //validate diagonals
+
+        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) {
+            gameBoard.identifyWinners(symbol, '', 'diagonal')
+            return true;
+
+        }
+        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) {
+            gameBoard.identifyWinners(symbol, '', 'diagonalinversa')
+            return true;
+        }
+
+        return false;
+    }
+
 
 
     const switchTurns = () => {
         if (playerOne.isPlaying) {
             playerOne.isPlaying = false;
             playerTwo.isPlaying = true;
-        } else {
-            playerOne.isPlaying = true;
-            playerTwo.isPlaying = false;
+            return
         }
+        playerOne.isPlaying = true;
+        playerTwo.isPlaying = false;
     }
 
-    return { initializeGame, Play }
+    return { initializeGame, Play,replay }
 
 }
 
@@ -102,3 +207,14 @@ const PlayGame = () => {
 // console.log(playerTwo);
 let game = PlayGame();
 game.initializeGame();
+
+function restart(){
+ game = PlayGame();
+game.initializeGame();
+document.getElementById('btnReplay').classList.toggle('hidden');
+document.getElementsByClassName('results')[0].textContent = '';
+
+
+}
+document.getElementById('btnReplay').addEventListener('click',restart);
+
